@@ -12,6 +12,7 @@ export default function App() {
   const [selectedRegion, setselectedRegion] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [theme, setTheme] = useState("light");
+  const [belgiumLoaded, setBelgiumLoaded] = useState(false);
 
   const navigate = useNavigate();
 
@@ -19,11 +20,19 @@ export default function App() {
 
   useEffect(() => {
     try {
-      fetchCountries();
+      if (!belgiumLoaded && countries.length > 0) {
+        const belgiumCountry = countries.find(
+          (country) => country.alpha3Code === "BEL"
+        );
+        if (belgiumCountry) {
+          setBelgiumLoaded(true);
+          setCountries([belgiumCountry, ...countries]);
+        }
+      }
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [countries, belgiumLoaded]);
 
   const handleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
@@ -100,6 +109,22 @@ export default function App() {
     navigate(`/${code}`);
   };
 
+  const loadedCountries = !noCountries ? ( countries.map((country,
+    index) => (
+    <HomePage
+      key={index}
+      code={country.alpha3Code}
+      name={country.name}
+      capital={country.capital}
+      population={country.population}
+      region={country.region}
+      flag={country.flag}
+      showDetails={showDetails}
+      theme={theme}
+    />
+    )) ) : (<h3>No countries found...</h3>
+    );
+
   return (
     <>
       <NavTheme handleTheme={handleTheme} theme={theme} />
@@ -111,7 +136,7 @@ export default function App() {
             <div className={`content ${theme === "dark" ? "dark-alt" : ""}`}>
               <form className="contentSearch">
                 <div className="contentInput">
-                <IoIosSearch  className="search"/>
+                  <IoIosSearch className="search" />
                   <input
                     className={` ${theme === "dark" ? "dark" : ""}`}
                     placeholder="Search for a country..."
@@ -140,23 +165,7 @@ export default function App() {
                   theme === "dark" ? "dark-alt" : ""
                 }`}
               >
-                {!noCountries ? (
-                  countries.map((country, index) => (
-                    <HomePage
-                      key={index}
-                      code={country.alpha3Code}
-                      name={country.name}
-                      capital={country.capital}
-                      population={country.population}
-                      region={country.region}
-                      flag={country.flag}
-                      showDetails={showDetails}
-                      theme={theme}
-                    />
-                  ))
-                ) : (
-                  <h3>No countries found...</h3>
-                )}
+               {loadedCountries}
               </div>
             </div>
           }
@@ -164,9 +173,7 @@ export default function App() {
 
         <Route
           path="/:countryCode"
-          element={
-            <Details theme={theme} countries={countries}   />
-          }
+          element={<Details theme={theme} countries={countries} />}
         />
       </Routes>
     </>
