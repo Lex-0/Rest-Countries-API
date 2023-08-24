@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router";
+import { CgArrowLongLeft } from "react-icons/cg";
 import "../Details.css";
 
 function Details({ countries, theme }) {
@@ -67,11 +68,7 @@ function Details({ countries, theme }) {
           onClick={goBack}
           className={`btn-Back ${theme === "dark" ? "dark" : ""}`}
         >
-          <img
-            src="assets/arrow.svg"
-            className={`icon-arrow ${theme === "dark" ? "dark" : ""}`}
-            alt="icon"
-          />
+          <CgArrowLongLeft className="arrow"/>
           <p>Back</p>
         </button>
         <div className={`content-info ${theme === "dark" ? "dark-alt" : ""} `}>

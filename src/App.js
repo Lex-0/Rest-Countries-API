@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import { IoIosSearch } from "react-icons/io";
 import NavTheme from "./components/NavTheme";
 import HomePage from "./Pages/HomePage";
 import Details from "./Pages/Details";
@@ -110,11 +111,7 @@ export default function App() {
             <div className={`content ${theme === "dark" ? "dark-alt" : ""}`}>
               <form className="contentSearch">
                 <div className="contentInput">
-                  <img
-                    src="assets/lupa.svg"
-                    className={`icon ${theme === "dark" ? "dark" : ""}`}
-                    alt="icon"
-                  />
+                <IoIosSearch  className="search"/>
                   <input
                     className={` ${theme === "dark" ? "dark" : ""}`}
                     placeholder="Search for a country..."

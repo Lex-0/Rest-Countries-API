@@ -8,7 +8,7 @@ function HomePage({
   capital,
   population,
   flag,
-  showDetails,
+  showDetails, 
   code,
 }) {
   const showDetailsHandler = () => {

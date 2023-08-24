@@ -127,6 +127,13 @@ h4{
     gap: 10px;
 }
 
+.arrow{
+    font-size: 25px;
+    position: absolute;
+    margin-left: -40px;
+    opacity: 0.8;
+}
+
 
 @media screen and (max-width: 1024px)  {
 
