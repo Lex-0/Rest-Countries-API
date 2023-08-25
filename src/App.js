@@ -20,19 +20,24 @@ export default function App() {
 
   useEffect(() => {
     try {
-      if (!belgiumLoaded && countries.length > 0) {
-        const belgiumCountry = countries.find(
-          (country) => country.alpha3Code === "BEL"
-        );
-        if (belgiumCountry) {
-          setBelgiumLoaded(true);
-          setCountries([belgiumCountry, ...countries]);
-        }
-      }
+      fetchCountries();
     } catch (error) {
       console.log(error);
     }
+  }, []);
+
+  useEffect(() => {
+    if (!belgiumLoaded && countries.length > 0) {
+      const belgiumCountry = countries.find(
+        (country) => country.alpha3Code === "BEL"
+      );
+      if (belgiumCountry) {
+        setBelgiumLoaded(true);
+        setCountries((prevCountries) => [belgiumCountry, ...prevCountries]);
+      }
+    }
   }, [countries, belgiumLoaded]);
+
 
   const handleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
