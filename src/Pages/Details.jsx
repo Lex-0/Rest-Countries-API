@@ -131,7 +131,7 @@ function Details({ countries, theme }) {
                   ))
                 ) : (
                   <div>
-                    <span className="values">No border...</span>{" "}
+                    <span className="valuess">No border...</span>{" "}
                   </div>
                 )}
               </div>

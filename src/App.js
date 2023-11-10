@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
@@ -15,6 +15,7 @@ export default function App() {
   const [belgiumLoaded, setBelgiumLoaded] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const noCountries = countries.status || countries.message;
 
@@ -26,23 +27,27 @@ export default function App() {
     }
   }, []);
 
+
   useEffect(() => {
-    if (!belgiumLoaded && countries.length > 0) {
-      const belgiumCountry = countries.find(
-        (country) => country.alpha3Code === "BEL"
-      );
-      if (belgiumCountry) {
-        setBelgiumLoaded(true);
-        setCountries((prevCountries) => [belgiumCountry, ...prevCountries]);
+    if (location.pathname === "/") {
+      if (!belgiumLoaded && countries.length > 0) {
+        const belgiumCountry = countries.find(
+          (country) => country.alpha3Code === "BEL"
+        );
+        if (belgiumCountry) {
+          setBelgiumLoaded(true);
+          navigate("/BEL");
+        }
       }
     }
-  }, [countries, belgiumLoaded]);
-
+  }, [countries, belgiumLoaded, location.pathname, navigate]);
+  
 
   const handleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
+ 
   const fetchCountries = async () => {
     const response = await fetch("https://restcountries.com/v2/all");
     const data = await response.json();
@@ -114,21 +119,25 @@ export default function App() {
     navigate(`/${code}`);
   };
 
-  const loadedCountries = !noCountries ? ( countries.map((country,
-    index) => (
-    <HomePage
-      key={index}
-      code={country.alpha3Code}
-      name={country.name}
-      capital={country.capital}
-      population={country.population}
-      region={country.region}
-      flag={country.flag}
-      showDetails={showDetails}
-      theme={theme}
-    />
-    )) ) : (<h3>No countries found...</h3>
-    );
+  const loadedCountries = !noCountries ? (
+    countries.map((country, index) => (
+      <HomePage
+        key={index}
+        code={country.alpha3Code}
+        name={country.name}
+        capital={country.capital}
+        population={country.population}
+        region={country.region}
+        flag={country.flag}
+        showDetails={showDetails}
+        theme={theme}
+      />
+    ))
+  ) : (
+    <h3>No countries found...</h3>
+  );
+
+
 
   return (
     <>
@@ -170,7 +179,7 @@ export default function App() {
                   theme === "dark" ? "dark-alt" : ""
                 }`}
               >
-               {loadedCountries}
+                {loadedCountries}
               </div>
             </div>
           }
@@ -180,6 +189,7 @@ export default function App() {
           path="/:countryCode"
           element={<Details theme={theme} countries={countries} />}
         />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
   );
