@@ -14,9 +14,13 @@ function Details({ countries, theme }) {
   const navigate = useNavigate();
 
   const getCountryByName = async () => {
-    const response = await fetch(`https://restcountries.com/v3.1/alpha/${params.countryName}`);
-    const data = await response.json();
-    setCountry(data[0]);
+      const response = await fetch(`https://restcountries.com/v3.1/alpha/${params.countryName}`);
+      const data = await response.json();
+    
+      setCountry(data[0]);
+      if (response.status !== 200) {
+        navigate('/BEL')
+      }
   }
 
   const goBack = () => {
@@ -49,7 +53,7 @@ function Details({ countries, theme }) {
   }, [country])
 
   useEffect(() => {
-    (async () => getCountryByName())()
+    getCountryByName()
   }, [])
 
   if (!country) return <div className="loader">Loading...</div>
