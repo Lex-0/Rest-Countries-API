@@ -19,41 +19,18 @@ export default function App() {
 
   const noCountries = countries.status || countries.message;
 
-  useEffect(() => {
-    try {
-      fetchCountries();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-
-  useEffect(() => {
-    if (location.pathname === "/") {
-      if (!belgiumLoaded && countries.length > 0) {
-        const belgiumCountry = countries.find(
-          (country) => country.alpha3Code === "BEL"
-        );
-        if (belgiumCountry) {
-          setBelgiumLoaded(true);
-          navigate("/BEL");
-        }
-      }
-    }
-  }, [countries, belgiumLoaded, location.pathname, navigate]);
-  
-
   const handleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
- 
+
   const fetchCountries = async () => {
     const response = await fetch("https://restcountries.com/v2/all");
     const data = await response.json();
 
     setCountries(data);
   };
+
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -119,6 +96,29 @@ export default function App() {
     navigate(`/${code}`);
   };
 
+  useEffect(() => {
+    try {
+      fetchCountries();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      if (!belgiumLoaded && countries.length > 0) {
+        const belgiumCountry = countries.find(
+          (country) => country.alpha3Code === "BEL"
+        );
+        if (belgiumCountry) {
+          setBelgiumLoaded(true);
+          navigate("/BEL");
+        }
+      }
+    }
+  }, [countries, belgiumLoaded, location.pathname, navigate]);
+
   const loadedCountries = !noCountries ? (
     countries.map((country, index) => (
       <HomePage
@@ -136,8 +136,6 @@ export default function App() {
   ) : (
     <h3>No countries found...</h3>
   );
-
-
 
   return (
     <>
@@ -175,9 +173,8 @@ export default function App() {
                 </div>
               </form>
               <div
-                className={`content-country ${
-                  theme === "dark" ? "dark-alt" : ""
-                }`}
+                className={`content-country ${theme === "dark" ? "dark-alt" : ""
+                  }`}
               >
                 {loadedCountries}
               </div>
@@ -186,7 +183,7 @@ export default function App() {
         />
 
         <Route
-          path="/:countryCode"
+          path="/:countryName"
           element={<Details theme={theme} countries={countries} />}
         />
         <Route path="*" element={<Navigate to="/" />} />
