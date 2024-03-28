@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import NavTheme from "./components/NavTheme";
@@ -19,35 +19,10 @@ export default function App() {
 
   const noCountries = countries.status || countries.message;
 
-  useEffect(() => {
-    try {
-      fetchCountries();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-
-  useEffect(() => {
-    if (location.pathname === "/") {
-      if (!belgiumLoaded && countries.length > 0) {
-        const belgiumCountry = countries.find(
-          (country) => country.alpha3Code === "BEL"
-        );
-        if (belgiumCountry) {
-          setBelgiumLoaded(true);
-          navigate("/BEL");
-        }
-      }
-    }
-  }, [countries, belgiumLoaded, location.pathname, navigate]);
-  
-
   const handleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
- 
   const fetchCountries = async () => {
     const response = await fetch("https://restcountries.com/v2/all");
     const data = await response.json();
@@ -137,7 +112,27 @@ export default function App() {
     <h3>No countries found...</h3>
   );
 
+  useEffect(() => {
+    try {
+      fetchCountries();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
+  useEffect(() => {
+    if (location.pathname === "/") {
+      if (!belgiumLoaded && countries.length > 0) {
+        const belgiumCountry = countries.find(
+          (country) => country.alpha3Code === "BEL"
+        );
+        if (belgiumCountry) {
+          setBelgiumLoaded(true);
+          navigate("/BEL");
+        }
+      }
+    }
+  }, [countries, belgiumLoaded, location.pathname, navigate]);
 
   return (
     <>
@@ -186,7 +181,7 @@ export default function App() {
         />
 
         <Route
-          path="/:countryCode"
+          path="/:countryName"
           element={<Details theme={theme} countries={countries} />}
         />
         <Route path="*" element={<Navigate to="/" />} />

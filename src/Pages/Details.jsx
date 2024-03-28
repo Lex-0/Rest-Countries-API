@@ -1,109 +1,114 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { CgArrowLongLeft } from "react-icons/cg";
 import "../Details.css";
 
 function Details({ countries, theme }) {
+  const [country, setCountry] = useState(null);
+  const [currencies, setCurrencies] = useState([]);
+  const [languages, setLanguages] = useState([]);
+  const [borders, setBorders] = useState([]);
+
   const params = useParams();
   const navigate = useNavigate();
 
-  let name;
-  let flagImg;
-  let nativeName;
-  let population;
-  let region;
-  let subregion;
-  let capital;
-  let topLevelDomain;
-  let currencies = [];
-  let languages = [];
-  let borders = [];
-
-  countries.forEach((country) => {
-    if (country.alpha3Code === params.countryCode) {
-      name = country.name;
-      flagImg = country.flag;
-      nativeName = country.nativeName;
-      population = country.population;
-      region = country.region;
-      subregion = country.subregion;
-      capital = country.capital;
-      topLevelDomain = country.topLevelDomain;
-
-      if (country.currencies) {
-        Object.keys(country.currencies).forEach((currencyCode) => {
-          const currency = country.currencies[currencyCode];
-          currencies.push(currency.name);
-        });
+  useEffect(() => {
+    const getCountryByName = async () => {
+      try {
+        const response = await fetch(`https://restcountries.com/v3.1/alpha/${params.countryName}`);
+        if (response.status === 200) {
+          const data = await response.json();
+          setCountry(data[0]);
+        } else {
+          navigate('/BEL');
+        }
+      } catch (error) {
+        console.error("Error fetching country data:", error);
       }
-
-      if (country.languages) {
-        Object.keys(country.languages).forEach((languageCode) => {
-          const language = country.languages[languageCode];
-          languages.push(language.name);
-        });
-      }
-
-      if (country.borders) {
-        Object.keys(country.borders).forEach((borderCode) => {
-          const border = country.borders[borderCode];
-          borders.push(border);
-        });
-      }
-    }
-  });
+    };
+  
+    getCountryByName();
+  }, [params.countryName, navigate]); 
+  
 
   const goBack = () => {
     navigate("/");
   };
 
+  useEffect(() => {
+    if (country?.currencies) {
+      const curr = Object.keys(country.currencies).map((currencyCode) => {
+        const currency = country.currencies[currencyCode];
+        return currency.name;
+      });
+      setCurrencies(curr);
+    }
+
+    if (country?.languages) {
+      const langs = Object.keys(country.languages).map((languageCode) => {
+        return country.languages[languageCode];
+      });
+      setLanguages(langs);
+    }
+
+    if (country?.borders) {
+      const brd = Object.keys(country.borders).map((borderCode) => {
+        return country.borders[borderCode];
+      });
+      setBorders(brd);
+    }
+  }, [country]);
+
+ 
+  
+    
+  if (!country) return <div className="loader">Cargando...</div>;
   return (
     <div className={`content-Details ${theme === "dark" ? "dark-alt" : ""}`}>
       <div
-        className={`content-Details-Country ${
-          theme === "dark" ? "dark-alt" : ""
-        } `}
+        className={`content-Details-Country ${theme === "dark" ? "dark-alt" : ""
+          } `}
       >
         <button
           onClick={goBack}
           className={`btn-Back ${theme === "dark" ? "dark" : ""}`}
         >
-          <CgArrowLongLeft className="arrow"/>
+          <CgArrowLongLeft className="arrow" />
           <p>Back</p>
         </button>
         <div className={`content-info ${theme === "dark" ? "dark-alt" : ""} `}>
-          <img src={flagImg} alt={name} className="flag-details" />
+          <img src={country.flags.png} alt={country.flags.alt} className="flag-details" />
 
           <div className={`contentt ${theme === "dark" ? "dark-alt" : ""} `}>
             <div className="details">
               <div className="details-left">
-                <h4>{name}</h4>
+                <h4>{country.name.common}</h4>
                 <p className="values">
                   Native Name:
-                  <span>{nativeName}</span>
+                  <span>{country.name.common}</span>
                 </p>
                 <p className="values">
                   Population:
-                  <span>{population}</span>
+                  <span>{country.population}</span>
                 </p>
                 <p className="values">
                   Region:
-                  <span>{region}</span>
+                  <span>{country.region}</span>
                 </p>
                 <p className="values">
                   Subregion:
-                  <span>{subregion}</span>
+                  <span>{country.subregion}</span>
                 </p>
 
                 <p className="values">
                   Capital:
-                  <span>{capital}</span>
+                  <span>{country.capital}</span>
                 </p>
               </div>
               <div className="details-right">
                 <p className="values">
                   Top Level Domain:
-                  <span>{topLevelDomain}</span>
+                  <span>{country.tld}</span>
                 </p>
                 <p className="values">
                   Currencies:
