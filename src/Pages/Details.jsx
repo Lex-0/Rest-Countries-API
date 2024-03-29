@@ -27,7 +27,7 @@ function Details({ countries, theme }) {
       }
     };
   
-    getCountryByName();
+    getCountryByName(); 
   }, [params.countryName, navigate]); 
   
 
@@ -59,15 +59,14 @@ function Details({ countries, theme }) {
     }
   }, [country]);
 
- 
-  
-    
   if (!country) return <div className="loader">Cargando...</div>;
+
   return (
     <div className={`content-Details ${theme === "dark" ? "dark-alt" : ""}`}>
       <div
-        className={`content-Details-Country ${theme === "dark" ? "dark-alt" : ""
-          } `}
+        className={`content-Details-Country ${
+          theme === "dark" ? "dark-alt" : ""
+        } `}
       >
         <button
           onClick={goBack}
@@ -77,7 +76,11 @@ function Details({ countries, theme }) {
           <p>Back</p>
         </button>
         <div className={`content-info ${theme === "dark" ? "dark-alt" : ""} `}>
-          <img src={country.flags.png} alt={country.flags.alt} className="flag-details" />
+          <img
+            src={country.flags.png}
+            alt={country.flags.alt}
+            className="flag-details"
+          />
 
           <div className={`contentt ${theme === "dark" ? "dark-alt" : ""} `}>
             <div className="details">
@@ -86,6 +89,7 @@ function Details({ countries, theme }) {
                 <p className="values">
                   Native Name:
                   <span>{country.name.common}</span>
+                  <span>{country.nativeName}</span>
                 </p>
                 <p className="values">
                   Population:
@@ -107,8 +111,9 @@ function Details({ countries, theme }) {
               </div>
               <div className="details-right">
                 <p className="values">
-                  Top Level Domain:
+                  Top Level Domain
                   <span>{country.tld}</span>
+                  <span>{country.topLevelDomain}</span>
                 </p>
                 <p className="values">
                   Currencies:

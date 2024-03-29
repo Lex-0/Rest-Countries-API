@@ -23,12 +23,14 @@ export default function App() {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
+
   const fetchCountries = async () => {
     const response = await fetch("https://restcountries.com/v2/all");
     const data = await response.json();
 
     setCountries(data);
   };
+
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -93,6 +95,29 @@ export default function App() {
   const showDetails = (code) => {
     navigate(`/${code}`);
   };
+
+  useEffect(() => {
+    try {
+      fetchCountries();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      if (!belgiumLoaded && countries.length > 0) {
+        const belgiumCountry = countries.find(
+          (country) => country.alpha3Code === "BEL"
+        );
+        if (belgiumCountry) {
+          setBelgiumLoaded(true);
+          navigate("/BEL");
+        }
+      }
+    }
+  }, [countries, belgiumLoaded, location.pathname, navigate]);
 
   const loadedCountries = !noCountries ? (
     countries.map((country, index) => (
@@ -170,9 +195,8 @@ export default function App() {
                 </div>
               </form>
               <div
-                className={`content-country ${
-                  theme === "dark" ? "dark-alt" : ""
-                }`}
+                className={`content-country ${theme === "dark" ? "dark-alt" : ""
+                  }`}
               >
                 {loadedCountries}
               </div>
