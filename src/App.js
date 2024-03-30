@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import NavTheme from "./components/NavTheme";
@@ -23,14 +23,12 @@ export default function App() {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
-
   const fetchCountries = async () => {
     const response = await fetch("https://restcountries.com/v2/all");
     const data = await response.json();
 
     setCountries(data);
   };
-
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -103,7 +101,6 @@ export default function App() {
       console.log(error);
     }
   }, []);
-
 
   useEffect(() => {
     if (location.pathname === "/") {
@@ -195,8 +192,9 @@ export default function App() {
                 </div>
               </form>
               <div
-                className={`content-country ${theme === "dark" ? "dark-alt" : ""
-                  }`}
+                className={`content-country ${
+                  theme === "dark" ? "dark-alt" : ""
+                }`}
               >
                 {loadedCountries}
               </div>

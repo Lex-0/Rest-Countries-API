@@ -15,21 +15,22 @@ function Details({ countries, theme }) {
   useEffect(() => {
     const getCountryByName = async () => {
       try {
-        const response = await fetch(`https://restcountries.com/v3.1/alpha/${params.countryName}`);
+        const response = await fetch(
+          `https://restcountries.com/v3.1/alpha/${params.countryName}`
+        );
         if (response.status === 200) {
           const data = await response.json();
           setCountry(data[0]);
         } else {
-          navigate('/BEL');
+          navigate("/BEL");
         }
       } catch (error) {
         console.error("Error fetching country data:", error);
       }
     };
-  
-    getCountryByName(); 
-  }, [params.countryName, navigate]); 
-  
+
+    getCountryByName();
+  }, [params.countryName, navigate]);
 
   const goBack = () => {
     navigate("/");
@@ -89,7 +90,6 @@ function Details({ countries, theme }) {
                 <p className="values">
                   Native Name:
                   <span>{country.name.common}</span>
-                  <span>{country.nativeName}</span>
                 </p>
                 <p className="values">
                   Population:
