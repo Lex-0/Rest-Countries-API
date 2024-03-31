@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import { CgArrowLongLeft } from "react-icons/cg";
 import "../Details.css";
 
-function Details({ countries, theme }) {
+function Details({ theme }) {
   const [country, setCountry] = useState(null);
   const [currencies, setCurrencies] = useState([]);
   const [languages, setLanguages] = useState([]);
@@ -22,7 +22,7 @@ function Details({ countries, theme }) {
           const data = await response.json();
           setCountry(data[0]);
         } else {
-          navigate("/BEL");
+          navigate("/");
         }
       } catch (error) {
         console.error("Error fetching country data:", error);
@@ -32,9 +32,7 @@ function Details({ countries, theme }) {
     getCountryByName();
   }, [params.countryName, navigate]);
 
-  const goBack = () => {
-    navigate("/");
-  };
+
 
   useEffect(() => {
     if (country?.currencies) {
@@ -59,6 +57,10 @@ function Details({ countries, theme }) {
       setBorders(brd);
     }
   }, [country]);
+
+  const goBack = () => {
+    navigate("/");
+  };
 
   if (!country) return <div className="loader">Cargando...</div>;
 

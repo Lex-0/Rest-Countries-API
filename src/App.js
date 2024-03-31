@@ -204,7 +204,7 @@ export default function App() {
 
         <Route
           path="/:countryName"
-          element={<Details theme={theme} countries={countries} />}
+          element={<Details theme={theme} />}
         />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
